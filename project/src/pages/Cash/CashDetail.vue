@@ -49,14 +49,19 @@
     <div class="container mt-3">
       <button @click="updateHandler()">수정</button>
       <button @click="deleteHandler()">삭제</button>
+      <button @click="backHandler()">취소</button>
     </div>
   </div>
 </template>
 <script setup>
 import { useDataStore } from '@/stores/db.js';
-import { ref, computed, reactive} from "vue";
+import { ref, reactive} from "vue";
 import {useRouter, useRoute } from 'vue-router';
 import moment from "moment";
+import 'moment/locale/ko'; // 한국어 로케일 불러오기
+moment.locale('ko'); // 로케일 설정을 한국어로 변경
+
+
 
 
 const convertToDate = (dateString) => {
@@ -65,8 +70,8 @@ const convertToDate = (dateString) => {
 
 
 // 데이터 불러오기
-const datastore = useDataStore();
-const {data, deleteData, renewData} = datastore;
+const dataStore = useDataStore();
+const {data, deleteData, renewData} = dataStore;
 
 // 특정 데이터 불러오기 위한 currentRoute 선언
 const currentRoute = useRoute();
@@ -80,6 +85,11 @@ const dataItemIndex = data.find(
   (item)=> item.id === currentRoute.params.id
 );
 const dataItem = reactive({ ...dataItemIndex });
+
+const backHandler = () => {
+  router.push("/Cash");
+}
+
 
 const deleteHandler = () => {
   deleteData(dataItem.id,()=>{
